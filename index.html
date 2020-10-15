@@ -14,25 +14,25 @@
             <!--Full Name-->
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" placeholder="Full Name" 
+                <input type="text" id="name" placeholder="Full Name" name="name"
                  required minlength="3" maxlength="50" />
             </div>
             <!--Phone Number-->
             <div class="form-group">
                 <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" placeholder="555-555-555" 
+                <input type="tel" id="phone" placeholder="555-555-555" name="phone"
                 required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" />
             </div>
             <!--Email Address -->
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="Email@address.com" 
+                <input type="email" id="email" placeholder="Email@address.com" name="email"
                 required />
             </div>
             <!--Website URL -->
             <div class="form-group">
                 <label for="Website">Website URL</label>
-                <input type="url" id="Website" placeholder="htts://example.com" required/>
+                <input type="url" id="Website" placeholder="htts://example.com" name="website" required/>
             </div>
             <!--Password -->
             <div class="form-group">
@@ -44,7 +44,7 @@
             <!--Confirm Password -->
             <div class="form-group">
                 <label for="password2">Confirm Password</label>
-                <input type="password" id="password2" placeholder="Confirm Password" 
+                <input type="password" id="password2" placeholder="Confirm Password" name="password"
                 required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"/>
             </div>
             <button type="submit">Register</button>
@@ -62,20 +62,64 @@
     const messageContainer = document.querySelector('.message-container');
     const message = document.getElementById('message');
  let isValid = false;
+ let passwordsMatch = false;
+
  function validateForm() {
      //Using Contraint API
 
      isValid = form.checkValidity();
    //Style main message for an error
-   message.textContent = 'Please fill out all fields.'
-   message.style.color = 'red';
-   messageContainer.style,borderColor = 'red';
+    if(!isValid) {
+        message.textContent = 'Please fill out all fields.'
+        message.style.color = 'red';
+        messageContainer.style,borderColor = 'red';
+        return;
+    }
+    //Check to see if passwords match
+    if(password1.value === password2.value) {
+        passwordsMatch = true;
+        password1.style.border = 'green';
+        password2.style.borderColor = 'green'
+    } else {
+        passwordsMatch = false;
+        message.textContent = 'Make sure passwords match.';
+        message.style.color = 'red';
+        messageContainer.style.borderColor = 'red';
+        password1.style.borderColor = 'red';
+        password2.style.borderColor = 'red';
+        return;
+    }
+
+    //If form is valid and passwords match
+
+    if(isValid && passwordsMatch) {
+        message.textContent = 'Successfully Registered!';
+        message.style.color = 'green';
+        messageContainer.style.borderColor = 'green';
+    }
+ }
+
+ function storeFormData() {
+    const user = {
+     name: form.name.value,
+     phone: form.phone.value,
+     email: form.email.value,
+     website: form.website.value,
+     password: form.password.value
+    };
+    //Do something with user data
+    console.log(user);
  }
 
 function processFormData(e) {
     e.preventDefault(e);
     //Validate Form
     validateForm();
+    //Submit Data if Valid
+    if(isValid && passwordsMatch) {
+       storeFormData(); 
+    }
+    form.reset();
 }
     //event Listener 
     form.addEventListener('submit', processFormData) 
